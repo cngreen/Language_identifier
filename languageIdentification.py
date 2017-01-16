@@ -195,9 +195,10 @@ def main():
 	while (i < len(lines)):
 		lines[i] = lines[i].lower()
 		language = identifyLanguage(lines[i], charFreq, bigramFreq)
+		i += 1
 		output = str(i) + ' ' + language + '\n'
 		targetFile.write(output)
-		i += 1
+		
 
 
 
