@@ -4,26 +4,90 @@ import re
 
 from porterStemmer import *
 
+#--------------------------------------------------------------------
 def removeSGML(input):
-	#removes < > & their content
-	strlist = []
-	for c in input:
-		strlist.append(c)
-	if '<' in strlist and '>' in strlist:
-		for firstndx in range(len(strlist)):
-			if strlist[firstndx] == '<':
-				break;
+	#print("input: ", input)
+	if '<' in input and '>' in input: #if there are tag characters find the tags
+		strlist = []
+		for c in input:
+			strlist.append(c)
 
+
+		firstndx = -1
 		secondndx = -1
+		# find the first < of the line
+		for i in range(len(strlist)):
+			if strlist[i] == '<':
+				firstndx = i
+				break
+
+		#print("starting index: ", firstndx)
+
+		# find the first > of the line
 		for i in range(len(strlist)):
 			if strlist[i] == '>':
 				secondndx = i
+				break
 
-	while firstndx <= secondndx:
-		strlist[firstndx] = ''
-		firstndx += 1
+		#print("ending index: ", secondndx)
 
-	input = ''.join(strlist)
+		quotendx = -1
+		temp = firstndx
+		# check if there is attribute quotations in tag (risk for extra >)
+		while temp <= secondndx:
+			if strlist[temp] == '"':
+				quotendx = temp
+				break
+			temp += 1
+
+
+		if quotendx != -1: #there is a quotation in the tag
+			quotendx2 = -1
+			temp = quotendx + 1
+			# make sure the quotation ends
+			while temp <= secondndx:
+				if strlist[temp] == '"':
+					quotendx2 = temp
+					break
+				temp += 1
+
+			if quotendx2 != -1: #the quote ended, remove quoted content:
+				while quotendx <= quotendx2:
+					strlist[quotendx] = ''
+					quotendx += 1
+				input = ''.join(strlist)
+				return(removeSGML(input)) #rerun the remove SGML without the quote
+			
+			else: #find end of quote:
+				temp = quotendx + 1
+				while temp <= len(strlist):
+					if strlist[temp] == '"':
+						quotendx2 = temp
+						break
+					temp += 1
+
+				if quotendx2 != -1: #the quote ended, remove quoted content:
+					while quotendx <= quotendx2:
+						strlist[quotendx] = ''
+						quotendx += 1
+					input = ''.join(strlist)
+					return(removeSGML(input)) #rerun the remove SGML without the quote
+
+				else: #the quote doesn't end on this line
+					sys.exit("ERROR: quotation in SGML tag does not end")
+
+
+
+
+	# remove all chars between first < and first > of the line
+		#print("remove from: ", firstndx, " to: ", secondndx)
+		while firstndx <= secondndx:
+			strlist[firstndx] = ''
+			firstndx += 1
+		input = ''.join(strlist) #check if there are more remaining
+		return(removeSGML(input))
+
+	#otherwise output the input
 	return input
 #--------------------------------------------------------------------
 #--------------------------------------------------------------------
@@ -89,8 +153,14 @@ def removeStopwords(tokens):
 #--------------------------------------------------------------------
 def stemWords(tokens):
 	output = []
-	return output
+	p = PorterStemmer()
 
+	for t in tokens:
+		if len(t) == 0:
+			continue
+		output.append(p.stem(t, 0, len(t)-1))
+
+	return output
 
 #--------------------------------------------------------------------
 #--------------------------------------------------------------------
