@@ -47,7 +47,7 @@ def identifyLanguage(input, charFreq, bigramFreq):
 	frenchV = len(charFreq[1])
 	italianV = len(charFreq[2])
 
-	if (len(input) != 0):
+	if (len(input) != 0): #probability of the first character given <start>
 		c = input[0]
 		if c not in charFreq[0].keys():
 			englishProb += calculateProbabilityStart(0, englishV)
@@ -64,7 +64,7 @@ def identifyLanguage(input, charFreq, bigramFreq):
 	
 	i = 1
 
-	while (i < len(input)):
+	while (i < len(input)): #probability of bigrams
 		b = input[i - 1] + input[i]
 		c = input[i]
 
