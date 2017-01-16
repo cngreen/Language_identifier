@@ -2,10 +2,31 @@ import sys
 import os
 import re
 
+from porterStemmer import *
+
 def removeSGML(input):
 	#removes < > & their content
-	input = re.sub('<[^>]*>', '', input)
+	strlist = []
+	for c in input:
+		strlist.append(c)
+	if '<' in strlist and '>' in strlist:
+		for firstndx in range(len(strlist)):
+			if strlist[firstndx] == '<':
+				break;
+
+		secondndx = -1
+		for i in range(len(strlist)):
+			if strlist[i] == '>':
+				secondndx = i
+
+	while firstndx <= secondndx:
+		strlist[firstndx] = ''
+		firstndx += 1
+
+	input = ''.join(strlist)
 	return input
+#--------------------------------------------------------------------
+#--------------------------------------------------------------------
 
 def comma(input):
 	if ',' not in input:
@@ -39,17 +60,46 @@ def tokenizeText(input):
 		tokens.append(w)
 	return tokens
 
+#--------------------------------------------------------------------
+#--------------------------------------------------------------------
+
+def getStopwords():
+	# read stopwords to list from file
+	stopwords = []
+	path = os.path.join(os.getcwd(), 'stopwords')
+	lines = [line.rstrip('\n') for line in open(path)]
+	lines = [line.strip(' ') for line in lines]
+
+	for line in lines:
+		stopwords.append(line)
+
+	return stopwords
+
 def removeStopwords(tokens):
+	# remove stopwords from tokens
+	stopwords = getStopwords()
 	output = []
+	for t in tokens:
+		if t not in stopwords:
+			output.append(t)
+	
 	return output
 
+#--------------------------------------------------------------------
+#--------------------------------------------------------------------
 def stemWords(tokens):
 	output = []
 	return output
 
+
+#--------------------------------------------------------------------
+#--------------------------------------------------------------------
 def main():
 	#print 'Argument List:', str(sys.argv)
-	foldername = str(sys.argv[1])
+	try: 
+		foldername = str(sys.argv[1])
+	except:
+		sys.exit("ERROR: no folder of that name")
 
 	path = os.path.join(os.getcwd(), foldername)
 
@@ -65,11 +115,14 @@ def main():
 		while '' in lines:
 			lines.remove('')
 
-		print lines
+		#print lines
 
 	myline = lines[5]
 	words = tokenizeText(myline)
 	print (words)
+
+	words = removeStopwords(words)
+	print(words)
 
 
 if __name__ == "__main__": 
