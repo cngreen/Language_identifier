@@ -2,6 +2,7 @@ import re
 
 def indentifyDates(input):
 	#finds numerical dates with years of 4 or two digits separated by - / . or ,
+	#returns dates in a list, removes them from the input string
 	matches = []
 
 	# XXXX-X/X-X/X
@@ -13,21 +14,29 @@ def indentifyDates(input):
 		input = re.sub(r'\d{4}[-/.,]\d{1,2}[-/.,]\d{1,2}', '', input)
 		
 	# X/X-X/X-XXXX
-	match = re.search(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{4}', input)
+	match = re.findall(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{4}', input)
 	if match != None:
-		matches.append(match.group())
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{4}', '', input)
 
 	#XX-X/X-X/X
-	match = re.search(r'\d{2}[-/.,]\d{1,2}[-/.,]\d{1,2}', input)
+	match = re.findall(r'\d{2}[-/.,]\d{1,2}[-/.,]\d{1,2}', input)
 	if match != None:
-		matches.append(match.group())
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{2}[-/.,]\d{1,2}[-/.,]\d{1,2}', '', input)
 	#X/X-X/X-XX
-	match = re.search(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{2}', input)
+	match = re.findall(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{2}', input)
 	if match != None:
-		matches.append(match.group())
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{2}', '', input)
 
 	print matches
-	return
+	print input
+	
+	return input, matches
 
 
 
