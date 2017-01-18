@@ -12,7 +12,6 @@ def removeSGML(input):
 		for c in input:
 			strlist.append(c)
 
-
 		firstndx = -1
 		secondndx = -1
 		# find the first < of the line
@@ -21,15 +20,12 @@ def removeSGML(input):
 				firstndx = i
 				break
 
-		#print("starting index: ", firstndx)
-
 		# find the first > of the line
 		for i in range(len(strlist)):
 			if strlist[i] == '>':
 				secondndx = i
 				break
 
-		#print("ending index: ", secondndx)
 
 		quotendx = -1
 		temp = firstndx
@@ -40,16 +36,17 @@ def removeSGML(input):
 				break
 			temp += 1
 
-
 		if quotendx != -1: #there is a quotation in the tag
 			quotendx2 = -1
 			temp = quotendx + 1
 			# make sure the quotation ends
-			while temp <= secondndx:
+			while temp <= secondndx: #check from just after the quote to the end of the tag
 				if strlist[temp] == '"':
 					quotendx2 = temp
 					break
 				temp += 1
+
+			print("quotendx2", quotendx2)
 
 			if quotendx2 != -1: #the quote ended, remove quoted content:
 				while quotendx <= quotendx2:

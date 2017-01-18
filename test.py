@@ -1,99 +1,93 @@
 import re
 
-def removeSGML(input):
-	#print("input: ", input)
-	if '<' in input and '>' in input: #if there are tag characters find the tags
-		strlist = []
-		for c in input:
-			strlist.append(c)
+def indentifyDates(input):
+	#finds dates of format 01.01.17 01/01/17 01.01.2017 01/01/2017 01-01-17 01-01-2017 
+	# 1.1.17 1/1/17 1.1.2017 1/1/2017 1-1-17 1-1-2017
+	# 1, 17 01, 17 1, 2017 01, 2017
+	dates = ''
+	if not any(char.isdigit() for char in input): #if no digit, no dates
+		return input, dates
 
+	strlist = [] #a list of chars in the str
+	for c in input:
+		strlist.append(c)
 
-		firstndx = -1
-		secondndx = -1
-		# find the first < of the line
-		for i in range(len(strlist)):
-			if strlist[i] == '<':
-				firstndx = i
-				break
+	i = 0
+	stringLength = len(strlist)
+	while i < stringLength:
+		if strlist[i].isdigit(): #a number
+			i += 1
+			if i < stringLength:
+				if strlist[i] == '.' or strlist[i] == '/' or strlist[i] == '-': #common date separators
+					i += 1
+					if i < stringLength:
+						if strlist[i].isdigit(): #a number after a common separator
+							i += 1
+							if i < stringLength:
+								i += 1
+						else:
+							continue #this is not a date (number, separator, non-numeric character)
+					else:
+						continue #end of string
+				elif strlist[i].isdigit(): #two numbers in a row
+					i += 1
 
-		#print("starting index: ", firstndx)
+				elif strlist[i] == ',':
+					i += 1
+					if i < stringLength:
+						if strlist[i] == ' ':
+							i += 1
+							if i < stringLength:
+								if strlist[i].isdigit():
+									i += 1
+									if i < stringLength:
+										if strlist[i].isdigit(): #number, numbernumber (valid date format)
+											i +=1
+											if i < stringLength:
+												if strlist[i].isdigit():
+													i += 1
+													if i < stringLength:
+														if strlist[i].isdigit: #1, 2017 (valid date format)
+															i -= 6
+															temp = 0
+															while temp < 7:
+																temp += 1
+																dates += strlist[i]
+																i += 1
 
-		# find the first > of the line
-		for i in range(len(strlist)):
-			if strlist[i] == '>':
-				secondndx = i
-				break
-
-		#print("ending index: ", secondndx)
-
-		quotendx = -1
-		temp = firstndx
-		# check if there is attribute quotations in tag (risk for extra >)
-		while temp <= secondndx:
-			if strlist[temp] == '"':
-				quotendx = temp
-				break
-			temp += 1
-
-
-		if quotendx != -1: #there is a quotation in the tag
-			quotendx2 = -1
-			temp = quotendx + 1
-			# make sure the quotation ends
-			while temp <= secondndx:
-				if strlist[temp] == '"':
-					quotendx2 = temp
-					break
-				temp += 1
-
-			if quotendx2 != -1: #the quote ended, remove quoted content:
-				while quotendx <= quotendx2:
-					strlist[quotendx] = ''
-					quotendx += 1
-				input = ''.join(strlist)
-				return(removeSGML(input)) #rerun the remove SGML without the quote
-			
-			else: #find end of quote:
-				temp = quotendx + 1
-				while temp <= len(strlist):
-					if strlist[temp] == '"':
-						quotendx2 = temp
-						break
-					temp += 1
-
-				if quotendx2 != -1: #the quote ended, remove quoted content:
-					while quotendx <= quotendx2:
-						strlist[quotendx] = ''
-						quotendx += 1
-					input = ''.join(strlist)
-					return(removeSGML(input)) #rerun the remove SGML without the quote
-
-				else:
-					sys.exit("ERROR: quotation in SGML tag does not end")
-
+															continue #added date
+														else:
+															continue #not a date 1, 999
+											else: #add 1, 17 to dates
+												i -= 4
+												temp = 0
+												while temp < 5:
+													temp += 1
+													dates += strlist[i]
+													i += 1
+												continue #end of string
+										else:
+											continue #end of string
 
 
 
-	# remove all chars between first < and first > of the line
-		#print("remove from: ", firstndx, " to: ", secondndx)
-		while firstndx <= secondndx:
-			strlist[firstndx] = ''
-			firstndx += 1
-		input = ''.join(strlist) #check if there are more remaining
-		return(removeSGML(input))
+			else:
+				continue #end of string
+		else:
+			i += 1
 
-	#otherwise output the input
-	return input
+	return input, dates
 
 
 
 def main():
-	#test = '<tagname attributeone="value one>" attributetwo="<value two>">Child Text</tagname>'
-	test = '<typical tag> typical text "" <typical tag>'
+	test = 'here is a 1/1/2017 string with 1.1.16 a bunch of 1, 2017 dates may 17, 1993 3.3.16 1-1-10 string string'
 
-	test = removeSGML(test)
+	dates = ''
+	input = ''
 
-	print(test)
+	input, dates = indentifyDates(test)
+	print(dates)
 
 if __name__ == "__main__": 
 	main()
