@@ -73,9 +73,6 @@ def removeSGML(input):
 				else: #the quote doesn't end on this line
 					sys.exit("ERROR: quotation in SGML tag does not end")
 
-
-
-
 	# remove all chars between first < and first > of the line
 		#print("remove from: ", firstndx, " to: ", secondndx)
 		while firstndx <= secondndx:
@@ -89,35 +86,135 @@ def removeSGML(input):
 #--------------------------------------------------------------------
 #--------------------------------------------------------------------
 
-def comma(input):
-	if ',' not in input:
-		return input
+def indentifyDates(input):
+	#finds numerical dates with years of 4 or two digits separated by - / . or ,
+	#returns dates in a list, removes them from the input string
+	matches = []
 
-def singleCharacter(input):
-	# a single character to be a token must be alphanumeric
-	if (len(input) == 1):
-		input = re.sub('[^a-zA-z0-9]', '', input)
-	return input
+	months = [] #list of common month abbrev.
+	months.extend(['january', 'jan', 'jan.'])
+	months.extend(['february', 'feb', 'feb.'])
+	months.extend(['march', 'mar', 'mar.'])
+	months.extend(['april', 'apr', 'apr.'])
+	months.extend(['may', 'may.'])
+	months.extend(['june', 'jun', 'jun.'])
+	months.extend(['july', 'jul', 'jul.'])
+	months.extend(['august', 'aug', 'aug.'])
+	months.extend(['september', 'sep', 'sep.', 'sept', 'sept.'])
+	months.extend(['october', 'oct', 'oct.'])
+	months.extend(['november', 'nov', 'nov.'])
+	months.extend(['december', 'dec', 'dec.'])
+	#print months
+	
+	# XXXX-X/X-X/X year(4), month, day sep by - / . or ,
+	match = re.findall(r'\d{4}[-/.,]\d{1,2}[-/.,]\d{1,2}', input)
+	if match != None:
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{4}[-/.,]\d{1,2}[-/.,]\d{1,2}', '', input)
+		
+	# X/X-X/X-XXXX day, month, year(4) sep by - / . or ,
+	match = re.findall(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{4}', input)
+	if match != None:
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{4}', '', input)
 
-def removeOdd(input):
-	# Removes special characters from a string, does not remove . ' , - 
-	if (len(input) == 0):
-		return input
-	punctuation = '~`!@#$%^&*()_+={}|<>?"'
-	input = re.sub('[' + punctuation + ']', '', input)
-	input = input.replace('\\', '')
-	input = input.replace('/', '')
-	input = input.replace('[', '')
-	input = input.replace(']', '')
-	return input
+	#XX-X/X-X/X year(2), month, day sep by - / . or ,
+	match = re.findall(r'\d{2}[-/.,]\d{1,2}[-/.,]\d{1,2}', input)
+	if match != None:
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{2}[-/.,]\d{1,2}[-/.,]\d{1,2}', '', input)
+	#X/X-X/X-XX day, month, year(2) sep by - / . or ,
+	match = re.findall(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{2}', input)
+	if match != None:
+		for m in match:
+			matches.append(m)
+		input = re.sub(r'\d{1,2}[-/.,]\d{1,2}[-/.,]\d{2}', '', input)
 
+	#abc-X/X-XX alpha month, day, year(4) 
+	match = re.findall(r'[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}[-/.,]*\s*\d{4}', input)
+	if match != None:
+		input = re.sub(r'[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}[-/.,]*\s*\d{4}', '', input)
+		for m in match:
+			month = re.findall(r'[a-zA-z]+', m)
+			month = str(month[0]).lower()
+			if month in months:
+				matches.append(m)
+			else:
+				input += (' ' + str(m)) #don't remove it if it wasn't a date
+
+	#X/X-abc-XXXX day, month, year(4)
+	match = re.findall(r'\d{1,2}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{4}', input)
+	if match != None:
+		input = re.sub(r'\d{1,2}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{4}', '', input)
+		for m in match:
+			month = re.findall(r'[a-zA-z]+', m)
+			month = str(month[0]).lower()
+			if month in months:
+				matches.append(m)
+			else:
+				input += (' ' + str(m)) #don't remove it if it wasn't a date
+
+	#year(4), month, day
+	match = re.findall(r'\d{4}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}', input)
+	if match != None:
+		input = re.sub(r'\d{4}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}', '', input)
+		for m in match:
+			month = re.findall(r'[a-zA-z]+', m)
+			month = str(month[0]).lower()
+			if month in months:
+				matches.append(m)
+			else:
+				input += (' ' + str(m)) #don't remove it if it wasn't a date
+
+	#abc-X/X-XX alpha month, day, year(2) 
+	match = re.findall(r'[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}[-/.,]*\s*\d{2}', input)
+	if match != None:
+		input = re.sub(r'[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}[-/.,]*\s*\d{2}', '', input)
+		for m in match:
+			month = re.findall(r'[a-zA-z]+', m)
+			month = str(month[0]).lower()
+			if month in months:
+				matches.append(m)
+			else:
+				input += (' ' + str(m)) #don't remove it if it wasn't a date
+
+	#X/X-abc-XXXX day, month, year(2)
+	match = re.findall(r'\d{1,2}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{2}', input)
+	if match != None:
+		input = re.sub(r'\d{1,2}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{2}', '', input)
+		for m in match:
+			month = re.findall(r'[a-zA-z]+', m)
+			month = str(month[0]).lower()
+			if month in months:
+				matches.append(m)
+			else:
+				input += (' ' + str(m)) #don't remove it if it wasn't a date
+
+	#year(2), month, day
+	match = re.findall(r'\d{2}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}', input)
+	if match != None:
+		input = re.sub(r'\d{2}[-/.,]*\s*[a-zA-z]{3,9}[.]*\s*[-./,]*\d{1,2}', '', input)
+		for m in match:
+			month = re.findall(r'[a-zA-z]+', m)
+			month = str(month[0]).lower()
+			if month in months:
+				matches.append(m)
+			else:
+				input += (' ' + str(m)) #don't remove it if it wasn't a date
+				
+	return input, matches
 
 def tokenizeText(input):
 	tokens = []
+
+	input, dates = indentifyDates(input)
+	tokens.extend(dates)
+
 	words = input.split()
 	for w in words:
-		w = removeOdd(w)
-		w = singleCharacter(w)
 		tokens.append(w)
 	return tokens
 
