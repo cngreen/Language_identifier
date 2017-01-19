@@ -16,6 +16,9 @@ def comma(input):
 
 
 def identifyContractions(input):
+	#identifies contractions, splits and adds to tokens, removes from input
+	tokens = []
+
 	contractions = {} #list of contactions, adapted from https://en.wikipedia.org/wiki/Wikipedia:List_of_English_contractions
 	contractions["aren't"] = 'are not'
 	contractions["can't"] = 'can not'
@@ -46,7 +49,7 @@ def identifyContractions(input):
 	contractions["she'd"] = 'she had'
 	contractions["she'll"] = 'she will'
 	contractions["she's"] = 'she is'
-	contractions["should’ve"] = 'should have'
+	contractions["should've"] = 'should have'
 	contractions["shouldn't"] = 'should not'
 	contractions["something's"] = 'something has'
 	contractions["that'll"] = 'that will'
@@ -93,15 +96,27 @@ def identifyContractions(input):
 	contractions["you've"] = 'you have'
 
 	if "'" not in input:
-		return input, contractions
+		return input, tokens
+
+	input = input.lower()
 
 	match = re.findall(r"[a-zA-Z]+'[a-zA-Z]+", input) #things that look like contractions
 	
 	if match != None:
 		for m in match:
+			if m in contractions.keys():
+				tokens.extend(contractions[m].split())
+			else:
+				a = re.split(r"'", m)
+				if a != None and len(a) >= 2:
+					if a[1] == 's':
+						a[1] = "'s"
+					tokens.extend(a)
 
+	input = re.sub(r"[a-zA-Z]+'[a-zA-Z]+", '', input) #remove contractions from input
 
-	return input, contractions
+	#print input, tokens
+	return input, tokens
 
 
 
@@ -112,7 +127,7 @@ def main():
 
 	#test, mylist = comma(test)
 
-	test = "this is a test for contractions i'm she's we're they're hasn't can't alex's"
+	test = "this is a test for th'hs contractions I'm HERE'RE i'm she's we're they're hasn't can't alex's"
 
 	test, mylist = identifyContractions(test)
 
