@@ -325,6 +325,20 @@ def identifyPhrases(input):
 		input = re.sub(r'\w+-\w+[-\w+]*', '', input)
 
 	return input, tokens
+
+def identifyFormattedNumbers(input):
+	#finds formatted numbers
+	tokens = []
+	if '.' not in input and ',' not in input:
+		return input, tokens
+
+	match = re.findall(r'\s\d+[[,\d+]*[.\d+]*]*\s', input)
+	if match != None:
+		for m in match:
+			m = m.strip()
+			tokens.append(m)
+
+	return input, tokens
 #--------------------------------------------------------------------------------------------------------
 
 def tokenizeText(input):
