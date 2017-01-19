@@ -293,7 +293,6 @@ def identifyContractions(input):
 	input = input.lower()
 
 	match = re.findall(r"[a-zA-Z]+'[a-zA-Z]+", input) #things that look like contractions
-	
 	if match != None:
 		for m in match:
 			if m in contractions.keys():
@@ -305,16 +304,40 @@ def identifyContractions(input):
 						a[1] = "'s"
 					tokens.extend(a)
 
-	input = re.sub(r"[a-zA-Z]+'[a-zA-Z]+", '', input) #remove contractions from input
+		input = re.sub(r"[a-zA-Z]+'[a-zA-Z]+", '', input) #remove contractions from input
 
 	#print input, tokens
 	return input, tokens
 #--------------------------------------------------------------------------------------------------------
+def identifyPhrases(input):
+	#finds alphanumeric hypenated phrases
+	#per spec: tokenization of - (keep phrases separated by - together)
+	#I am considering 93-thousand as a phrase rather than '93' and 'thousand'
+	tokens = []
+	if '-' not in input:
+		return input, tokens
+
+	match = re.findall(r'\w+-\w+[-\w+]*', input)
+	if match != None:
+		for m in match:
+			tokens.append(m)
+
+		input = re.sub(r'\w+-\w+[-\w+]*', '', input)
+
+	return input, tokens
+#--------------------------------------------------------------------------------------------------------
+
 def tokenizeText(input):
 	tokens = []
 
 	input, dates = indentifyDates(input)
 	tokens.extend(dates)
+
+	input, contractions = identifyContractions(input)
+	tokens.extend(contractions)
+
+	input, phrases = identifyPhrases(input)
+	tokens.extend(phrases)
 
 	words = input.split()
 	for w in words:
