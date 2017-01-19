@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+import operator
 
 from porterStemmer import *
 
@@ -435,7 +436,7 @@ def main():
 	path = os.path.join(os.getcwd(), foldername) #specified folder
 
 	for filename in os.listdir(path): #for all files in specified folder
-		print str(filename)
+		#print str(filename)
 		path2file = os.path.join(path, filename)
 		lines = [line.rstrip('\n') for line in open(path2file)] #get all the text lines from the file
 
@@ -456,7 +457,10 @@ def main():
 				words.extend(temp) #add this to overall words
 
 
-	print "Words " len(words)
+	targetFile = open('preprocess.output', 'w+')
+
+	output =  "Words " + str(len(words)) + '\n'
+	targetFile.write(output)
 
 	for word in words:
 		if word not in vocab.keys():
@@ -464,7 +468,29 @@ def main():
 		else:
 			vocab[word] += 1
 
-	print "Vocabulary " len(vocab)
+	output = "Vocabulary " + str(len(vocab)) + '\n'
+	targetFile.write(output)
+
+	top50 = sorted(vocab.iteritems(), key=operator.itemgetter(1), reverse=True)[:50]
+
+	for top in top50:
+		output = str(top[0]) + ' ' + str(top[1]) + '\n'
+		targetFile.write(output)
+
+	#FIND NUM WORDS TO GET TOP 25%
+	# top150 = sorted(vocab.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
+
+	# total = 0
+	# countWords = 0
+
+	# while total < 36643:
+	# 	total += top150[countWords][1]
+	# 	countWords += 1
+
+	# print countWords, total
+
+	# print top150[60]
+
 
 
 if __name__ == "__main__": 
