@@ -478,18 +478,18 @@ def main():
 		targetFile.write(output)
 
 	#FIND NUM WORDS TO GET TOP 25%
-	top150 = sorted(vocab.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
+	# top150 = sorted(vocab.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
 
-	total = 0
-	countWords = 0
+	# total = 0
+	# countWords = 0
 
-	while total < 36643:
-		total += top150[countWords][1]
-		countWords += 1
+	# while total < 36643:
+	# 	total += top150[countWords][1]
+	# 	countWords += 1
 
-	print countWords, total
+	# print countWords, total
 
-	print top150[60]
+	# print top150[60]
 
 
 
