@@ -346,12 +346,12 @@ def identifyAcronymsAbbrev(input):
 	if '.' not in input:
 		return input, tokens
 
-	match = re.findall(r'\s\w+[.]+\w*[.\w*]*', input)
+	match = re.findall(r'\w+[.]+\w*[.\w*]*', input)
 	if match != None:
 		for m in match:
 			m = m.strip()
 			tokens.append(m)
-		input = re.sub(r'\s\w+[.]+\w*[.\w*]*', '', input)
+		input = re.sub(r'\w+[.]+\w*[.\w*]*', '', input)
 
 	return input, tokens
 #--------------------------------------------------------------------------------------------------------
@@ -478,18 +478,18 @@ def main():
 		targetFile.write(output)
 
 	#FIND NUM WORDS TO GET TOP 25%
-	# top150 = sorted(vocab.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
+	top150 = sorted(vocab.iteritems(), key=operator.itemgetter(1), reverse=True)[:150]
 
-	# total = 0
-	# countWords = 0
+	total = 0
+	countWords = 0
 
-	# while total < 36643:
-	# 	total += top150[countWords][1]
-	# 	countWords += 1
+	while total < 36643:
+		total += top150[countWords][1]
+		countWords += 1
 
-	# print countWords, total
+	print countWords, total
 
-	# print top150[60]
+	print top150[60]
 
 
 

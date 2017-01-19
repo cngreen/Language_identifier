@@ -6,12 +6,12 @@ def identifyAcronymsAbbrev(input):
 	if '.' not in input:
 		return input, tokens
 
-	match = re.findall(r'\s\w+[.]+\w*[.\w*]*', input)
+	match = re.findall(r'\w+[.]+\w*[.\w*]*', input)
 	if match != None:
 		for m in match:
 			m = m.strip()
 			tokens.append(m)
-		input = re.sub(r'\s\w+[.]+\w*[.\w*]*', '', input)
+		input = re.sub(r'\w+[.]+\w*[.\w*]*', '', input)
 
 	return input, tokens
 
@@ -21,7 +21,7 @@ def identifyAcronymsAbbrev(input):
 
 def main():
 	mylist = []
-	test = 'for vortex generators, the importance is stressed of the vortex paths'
+	test = 'j. aero. sc. v. 26, august, 1959'
 
 	test, mylist = identifyAcronymsAbbrev(test)
 
