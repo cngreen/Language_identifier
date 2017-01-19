@@ -303,7 +303,6 @@ def identifyContractions(input):
 					if a[1] == 's':
 						a[1] = "'s"
 					tokens.extend(a)
-
 		input = re.sub(r"[a-zA-Z]+'[a-zA-Z]+", '', input) #remove contractions from input
 
 	#print input, tokens
@@ -321,7 +320,6 @@ def identifyPhrases(input):
 	if match != None:
 		for m in match:
 			tokens.append(m)
-
 		input = re.sub(r'\w+-\w+[-\w+]*', '', input)
 
 	return input, tokens
@@ -337,6 +335,22 @@ def identifyFormattedNumbers(input):
 		for m in match:
 			m = m.strip()
 			tokens.append(m)
+		input = re.sub(r'\s\d+[[,\d+]*[.\d+]*]*\s', '', input)
+
+	return input, tokens
+
+def identifyAcronymsAbbrev(input):
+	#finds formatted numbers
+	tokens = []
+	if '.' not in input:
+		return input, tokens
+
+	match = re.findall(r'\s\w+[.]\w*[.\w*]*', input)
+	if match != None:
+		for m in match:
+			m = m.strip()
+			tokens.append(m)
+		input = re.sub(r'\s\w+[.]\w*[.\w*]*', '', input)
 
 	return input, tokens
 #--------------------------------------------------------------------------------------------------------
@@ -353,9 +367,17 @@ def tokenizeText(input):
 	input, phrases = identifyPhrases(input)
 	tokens.extend(phrases)
 
+	input, numbers = identifyFormattedNumbers(input)
+	tokens.extend(numbers)
+
+	input, abbrev = identifyAcronymsAbbrev(input)
+	tokens.extend(input)
+
 	words = input.split()
 	for w in words:
+		w = re.sub(r'\W+', '', w)
 		tokens.append(w)
+
 	return tokens
 
 #----------------------------------------------------------------------------------------------------------------------------------------
