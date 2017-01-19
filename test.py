@@ -78,32 +78,20 @@ def identifyContractions(input):
 	contractions["who'll"] = 'who will'
 	contractions["who're"] = 'who are'
 	contractions["who's"] = 'who has'
-	
+	contractions["who've"] = 'who have'
+	contractions["why'd"] = 'why did'
+	contractions["why'll"] = 'why will'
+	contractions["why're"] = 'why are'
+	contractions["why's"] = 'why is'
+	contractions["won't"] = 'will not'
+	contractions["would've"] = 'would have'
+	contractions["wouldn't"] = 'would not'
+	contractions["y'all"] = 'you all'
+	contractions["you'd"] = 'you would'
+	contractions["you'll"] = 'you will'
+	contractions["you're"] = 'you are'
+	contractions["you've"] = 'you have'
 
-who’re	who are
-who’s	who has / who is / who does
-who’ve	who have
-why'd	why did
-why’ll	why will
-why’re	why are
-why’s	why has / why is / why does
-won’t	will not
-won’t’ve	will not have
-would’ve	would have
-wouldn’t	would not
-wouldn’t’ve	would not have
-y’all / ya'll	you all, literally, "ya all"
-y’all’d’ve	you all would have
-y’all’dn’t’ve	you all would not have
-y’all’ll	you all will
-y’all’on’t	you all will not
-y’all’ll’ve	you all will have
-y'all're	you all are
-y’all’ll’ven’t	you all will have not
-you’d	you had / you would
-you’ll	you will
-you’re	you are
-you’ve	you have
 	if "'" not in input:
 		return input, contractions
 
