@@ -71,7 +71,7 @@ def removeSGML(input):
 					return(removeSGML(input)) #rerun the remove SGML without the quote
 
 				else: #the quote doesn't end on this line
-					sys.exit("ERROR: quotation in SGML tag does not end")
+					sys.exit("ERROR: improper SGML tag, quotation in SGML tag does not end")
 
 	# remove all chars between first < and first > of the line
 		#print("remove from: ", firstndx, " to: ", secondndx)
@@ -345,18 +345,20 @@ def identifyAcronymsAbbrev(input):
 	if '.' not in input:
 		return input, tokens
 
-	match = re.findall(r'\s\w+[.]\w*[.\w*]*', input)
+	match = re.findall(r'\s\w+[.]+\w*[.\w*]*', input)
 	if match != None:
 		for m in match:
 			m = m.strip()
 			tokens.append(m)
-		input = re.sub(r'\s\w+[.]\w*[.\w*]*', '', input)
+		input = re.sub(r'\s\w+[.]+\w*[.\w*]*', '', input)
 
 	return input, tokens
 #--------------------------------------------------------------------------------------------------------
 
 def tokenizeText(input):
 	tokens = []
+	if input == '':
+		return tokens
 
 	input, dates = indentifyDates(input)
 	tokens.extend(dates)
@@ -371,12 +373,13 @@ def tokenizeText(input):
 	tokens.extend(numbers)
 
 	input, abbrev = identifyAcronymsAbbrev(input)
-	tokens.extend(input)
+	tokens.extend(abbrev)
 
 	words = input.split()
 	for w in words:
 		w = re.sub(r'\W+', '', w)
-		tokens.append(w)
+		if w != '':
+			tokens.append(w)
 
 	return tokens
 
@@ -421,34 +424,50 @@ def stemWords(tokens):
 #----------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------
 def main():
+	words = []
+	vocab = {}
 	#print 'Argument List:', str(sys.argv)
 	try: 
 		foldername = str(sys.argv[1])
 	except:
 		sys.exit("ERROR: no folder of that name")
 
-	path = os.path.join(os.getcwd(), foldername)
+	path = os.path.join(os.getcwd(), foldername) #specified folder
 
-	for filename in os.listdir(path):
+	for filename in os.listdir(path): #for all files in specified folder
+		print(filename)
 		#print str(filename)
 		path2file = os.path.join(path, filename)
-		lines = [line.rstrip('\n') for line in open(path2file)]
+		lines = [line.rstrip('\n') for line in open(path2file)] #get all the text lines from the file
 
-	
-		for i in range(len(lines)):
-			lines[i] = removeSGML(lines[i])
+		#for each line in the file
+		for line in lines:
+			print line
+			line = removeSGML(line) #step one: remove SGML
+			line.strip()
+			print 'step one (SGML): ', line
+			if line != '':
+				temp = []
+				temp = tokenizeText(line) #step two: tokenize text
+				print 'step two (tokens): ', temp
+				# temp = removeStopwords(temp) #step three: remove stop words
+				# print 'step three (stop words): ', temp
+				# temp = stemWords(temp) #step four: step vocab
+				# print 'step four (stem): ', temp
 
-		while '' in lines:
-			lines.remove('')
+				words.extend(temp) #add this to overall words
 
-		#print lines
 
-	myline = lines[5]
-	words = tokenizeText(myline)
-	print (words)
+	print len(words)
+	print words
 
-	words = removeStopwords(words)
-	print(words)
+	for word in words:
+		if word not in vocab.keys():
+			vocab[word] = 1
+		else:
+			vocab[word] += 1
+
+	print vocab
 
 
 if __name__ == "__main__": 

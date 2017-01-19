@@ -1,11 +1,17 @@
 import re
 
-def testFunc(input):
+def identifyAcronymsAbbrev(input):
+	#finds formatted numbers
 	tokens = []
-	words = input.split()
-	for w in words:
-		w = re.sub(r'\W+', '', w)
-		tokens.append(w)
+	if '.' not in input:
+		return input, tokens
+
+	match = re.findall(r'\s\w+[.]+\w*[.\w*]*', input)
+	if match != None:
+		for m in match:
+			m = m.strip()
+			tokens.append(m)
+		input = re.sub(r'\s\w+[.]+\w*[.\w*]*', '', input)
 
 	return input, tokens
 
@@ -15,9 +21,11 @@ def testFunc(input):
 
 def main():
 	mylist = []
-	test = 'here is words and $ * th&ey mi*ght ha]]ve ch@$#@!%#^@%aracter*@#s in them.'
+	test = 'for vortex generators, the importance is stressed of the vortex paths'
 
-	test, mylist = testFunc(test)
+	test, mylist = identifyAcronymsAbbrev(test)
+
+	print test, mylist
 
 if __name__ == "__main__": 
 	main()

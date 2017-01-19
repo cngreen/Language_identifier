@@ -94,7 +94,6 @@ def identifyLanguage(input, charFreq, bigramFreq):
 
 		i += 1
 
-
 	output = ''
 
 	if (englishProb >= frenchProb and englishProb >= italianProb):
