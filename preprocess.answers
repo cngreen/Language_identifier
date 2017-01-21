@@ -1,5 +1,6 @@
 Total number of words in the Cranfield Collection: 146569
 Vocabulary size of the CC: 11400
+
 Minimum number of unique words for 25% of the total number of words: 60
 	25% of total words = 146569/4 = 36642.25 = 36643
 	sum of top 60 words = 36933 (60th word freq = 368)
@@ -8,97 +9,28 @@ Subset 1: cranfield0069
 	total num words: 95
 	vocab size: 75
 
-	69 (1)
-	predicted shock envelopes about two types vehicles large angles attack (10)
-	kaattari g.e. (2)
-	nasa tn.d860 1961 (3)
-	methods based  oblique  normal-shock relationships (5)
-	continuity  mass flow through suitably chosen volume elements between (9)
-	shock body were developed predict shock envelopes about two (9)
-	types vehicles being considered atmosphere entry one type (8)
-	high-drag capsule shape   other type  essentially slender triangular (8)
-	wing capable providing high lift high drag depending (8)
-	angle attack predicted measured shock envelopes were compared (8)
-	mach number range 3 15 vehicles  high angles (8)
-	attack good agreement found most available experimental (7)
-	data were speed temperature range  which no important realgas (9)
-	effects occurred (2)
+	V = Kn^b
+	75 = (59.2 * 95)^0.5
+	b = 0.5
+	K = 59.2
+
+	predicted vocabulary size for:
+		1,000,000: V = (59.2 * 1000000)^0.5 = 7694
+		100,000,000: V = (59.2 * 100000000)^0.5 = 76942
 
 Subset 2: cranfield0329
 	total num words: 397
 	vocab size: 184
 
-	329 
-	various aerodynamic characteristics hypersonic rarefied gas flow
-	probstein r.f.  kemp n.h. 
-	j. ae. scs. 27 1960 
+	V = Kn^b
+	184 = (85.3 * 397)^0.5
+	b = 0.5
+	K = 85.3
 
-	paper considers problem calculating viscous aerodynamic 
-	characteristics blunt bodies hypersonic speeds 
-	sufficiently high altitudes appropriate mean free 
-	path becomes too large use familiar boundary-layer 
-	theory not so large free molecule concepts apply 
-	results order-of-magnitude analysis presented 
-	define regimes rarefied gas flow limits continuum
-	theory based theoretical experimental evidence 
-	complete navier-stokes equations used 
-	model except very close free molecule condition
-	model may not necessarily give shock wave structure
-	detail satisfies overall conservation laws should give
-	reasonably accurate picture mean aerodynamic quantities
-	intermediate regime two fundamental classes 
-	problems viscous layer class merged layer 
-	class latter corresponding larger degree rarefaction 
-	viscous layer class thin shock wave 
-	shock layer region between shock body fully viscous 
-	although viscous stresses conductive heat transfer 
-	small shock wave boundary use 
-	navier-stokes equations outer boundary conditions given
-	hugoniot relations justified merged layer
-	class shock wave no longer thin navier-stokes
-	equations can used give solution includes shock
-	structure has free-stream conditions outer boundary conditions
-	simpler procedure presented incipient merged
-	conditions shock may no longer considered infinitesimally
-	thin discontinuity not thickened
-	sufficiently entail fully merged layer analysis
-	case approximate shock discontinuity obeying conservation
-	laws include curvature effects viscous stresses
-	heat conduction 
-	sphere cylinder shown navier-stokes
-	equations can reduced ordinary differential equations
-	both viscous merged layer class problems solutions
-	these equations used connection hypersonic flow
-	problems general only valid stagnation region
-	illustrate viscous layer solutions numerical calculations
-	performed sphere cylinder assumption
-	constant density shock layer useful
-	approximation hypersonic speeds illustrate merged
-	layer solution calculations carried out sphere
-	using incipient merged layer approximation 
-	results presented detachment distance surface shear
-	heat-transfer rate stagnation region highly cooled
-	sphere flying hypersonic speed decreasing reynolds
-	number shear heat transfer shown increase above
-	extrapolated boundary-layer values viscous layer
-	regime then begin falling incipient merged regime
-	reynolds number decreases incipient merged
-	regime density shock layer increases static
-	stagnation enthalpy behind shock decrease 
-	calculations performed insulated sphere show
-	decreasing reynolds number incipient merged regime
-	density shock layer decreases total enthalpy behind
-	shock stagnation point increase so
-	higher than free-stream total enthalpy stagnation-point
-	pressure behaves like total enthalpy
-	highly cooled cylinder viscous layer regime
-	same quantities presented sphere increase
-	found shear heat transfer above extrapolated boundarylayer
-	theory small agreement vorticity interaction
-	theory
-	discussion given behavior available experimental
-	data viscous flow quantities intermediate regime behavior predicted results present calculations
-	qualitative agreement indicated 
+	predicted vocabulary size for:
+		1,000,000: V = (85.3 * 1000000)^0.5 = 9236
+		100,000,000: V = (85.3 * 100000000)^0.5 = 92358
+
 
 
 
